@@ -9,6 +9,7 @@ using Crusader.Confess;
 
 namespace Crusader.Commands
 {
+    /// <summary>/confess</summary>
     public class ConfessCommand : CringeCommand
     {
         public override string Name => "confess";

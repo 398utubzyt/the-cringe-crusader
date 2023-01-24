@@ -21,6 +21,14 @@ namespace Crusader
             return value;
         }
 
+        /// <summary>Gets whether a file <paramref name="path"/> exists or not.</summary>
+        /// <param name="path">The path to check.</param>
+        /// <returns><see langword="true"/> if it already exists, otherwise <see langword="false"/>.</returns>
+        public static bool Exists(string path)
+        {
+            return File.Exists(path);
+        }
+
         /// <summary>Ensures that a file <paramref name="path"/> exists.</summary>
         /// <param name="path">The path to check.</param>
         /// <returns><see langword="true"/> if it already exists, otherwise <see langword="false"/>.</returns>

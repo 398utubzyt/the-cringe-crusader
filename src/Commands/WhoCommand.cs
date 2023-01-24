@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace Crusader.Commands
 {
+    /// <summary>/who</summary>
     public class WhoCommand : CringeCommand
     {
         public override string Name => "who";

@@ -5,22 +5,16 @@ using System.Threading.Tasks;
 
 namespace Crusader
 {
+    /// <summary>The class of the main entry point.</summary>
     public static class _Main
     {
         private static Bot bot;
-        /// <summary>
-        /// I tried, but this API forced me to use a static reference. :(
-        /// </summary>
+        /// <summary>I tried, but this API forced me to use a static reference. :(</summary>
         public static Bot Bot => bot;
-        /// <summary>
-        /// Main entry point.
-        /// </summary>
-        /// <returns></returns>
+        /// <summary>Main entry point.</summary>
         public static Task Main() => AsyncMain();
 
-        /// <summary>
-        /// Asynchronous entry point.
-        /// </summary>
+        /// <summary>Asynchronous entry point.</summary>
         private static async Task AsyncMain()
         {
             if (!FileUtil.Ensure(FileUtil.Root("token.txt")))
@@ -67,8 +61,29 @@ namespace Crusader
 
                         // Logs a confession.
                         case "confess":
-                            Bot.Confessions.Create(0, 0, string.Join(' ', input[1..]));
-                            await Logger.Info("Confession logged.");
+                            if (input.Length < 2)
+                                break;
+                            Confess.Confession c = bot.Confessions.Create(Discord.SnowflakeUtils.ToSnowflake(DateTimeOffset.Now), 
+                                bot.Offline ? 0 : bot.Client.CurrentUser.Id, string.Join(' ', input[1..]));
+                            await Logger.Info($"Confession logged ({c.Id}).");
+                            break;
+
+                        // Logs a confession.
+                        case "cquery":
+                            if (input.Length < 2)
+                                break;
+                            Guid id;
+                            if (!Guid.TryParse(input[1], out id))
+                                break;
+                            Confess.Confession c2 = bot.Confessions.Get(id);
+                            if (!c2.Id.Equals(Guid.Empty))
+                            {
+                                await Logger.Info($"Confession {c2.Id}");
+                                await Logger.Info($"At {Discord.SnowflakeUtils.FromSnowflake(c2.Date).LocalDateTime}");
+                                Discord.IUser user = c2.Author != 0 ? await bot.Client.GetUserAsync(c2.Author) : null;
+                                await Logger.Info($"From '{(user != null ? $"{user.Username}#{user.Discriminator}" : "User not found")}' ({c2.Author})");
+                            }
+                            await Logger.Info($"\"{c2.Message}\"");
                             break;
                     }
                 }

@@ -8,6 +8,7 @@ using Crusader.Tod;
 
 namespace Crusader.Commands
 {
+    /// <summary>/tod</summary>
     public class TodCommand : CringeCommand
     {
         public override string Name => "tod";
