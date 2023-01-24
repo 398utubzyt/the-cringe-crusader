@@ -23,6 +23,11 @@ namespace Crusader
         /// </summary>
         private static async Task AsyncMain()
         {
+            if (!FileUtil.Ensure(FileUtil.Root("token.txt")))
+            {
+                await Logger.Error("Please ensure that a bot token exists.");
+                return;
+            }
             // Create bot with new token.
             bot = new Bot(File.ReadAllText(FileUtil.Root("token.txt")));
             
