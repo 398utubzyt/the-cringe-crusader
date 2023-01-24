@@ -1,0 +1,1 @@
+﻿Bot token goes here (sucks to suck, I didn't put mine here :P)
