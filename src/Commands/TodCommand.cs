@@ -22,7 +22,7 @@ namespace Crusader.Commands
             => type switch { TodType.Truth => Color.Green, TodType.Dare => Color.Red, _ => Color.LightGrey };
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private async Task Impl(Bot bot, IDiscordInteraction interaction, TodType type, bool button)
+        protected async Task Impl(Bot bot, IDiscordInteraction interaction, TodType type, bool button)
         {
             await interaction.DeferAsync();
 
