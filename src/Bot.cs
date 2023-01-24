@@ -10,7 +10,7 @@ namespace Crusader
     {
         private readonly string token;
         private readonly DiscordSocketClient client;
-        private readonly CommandService commands;
+        //private readonly CommandService commands;
 
         public bool Running => client.ConnectionState == ConnectionState.Connected;
 
@@ -36,6 +36,7 @@ namespace Crusader
         {
             await Logger.Info("Ready");
             
+            
         }
 
         #endregion
@@ -43,11 +44,12 @@ namespace Crusader
         public Bot(string token)
         {
             client = new DiscordSocketClient();
-            commands = new CommandService(new CommandServiceConfig() { ThrowOnError = false });
+            //commands = new CommandService(new CommandServiceConfig() { ThrowOnError = false });
 
             this.token = token;
 
             client.Log += Logger.Log;
+            client.SlashCommandExecuted += CommandManager.Run;
 
             client.Ready += Ready;
         }

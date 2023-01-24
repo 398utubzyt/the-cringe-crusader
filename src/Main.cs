@@ -5,26 +5,35 @@ using System.Threading.Tasks;
 
 namespace Crusader
 {
-#pragma warning disable IDE1006 // Naming Styles
-    internal class _Main
-#pragma warning restore IDE1006 // Naming Styles
+    public static class _Main
     {
-        private static Task Main(string[] args) => new _Main().AsyncMain();
+        public static Task Main() => AsyncMain();
 
-        private async Task AsyncMain()
+        private static async Task AsyncMain()
         {
+            await CommandManager.Load();
+
             Bot bot = new Bot(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "token.txt")));
 
             await bot.Start();
 
             while (bot.Running)
             {
-
+                string[] input = Console.ReadLine().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if (input.Length > 0)
+                {
+                    switch (input[0].ToLower())
+                    {
+                        case "stop":
+                            await bot.Stop();
+                            break;
+                    }
+                }
             }
 
-            await bot.Stop();
+            await CommandManager.Unload();
         }
 
-        private _Main() { } // Prevent instantiation from other classes
+        //private _Main() { } // Prevent instantiation from other classes
     }
 }
