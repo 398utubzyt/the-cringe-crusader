@@ -14,6 +14,6 @@ namespace Crusader.Commands
         public virtual GuildPermission Permission { get; } = 0;
         public virtual bool Nsfw { get; } = false;
         public virtual Task Build(SlashCommandBuilder builder) { return Task.CompletedTask; }
-        public abstract Task Run(SocketSlashCommand command);
+        public abstract Task Run(Bot bot, SocketSlashCommand command);
     }
 }

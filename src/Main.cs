@@ -7,12 +7,14 @@ namespace Crusader
 {
     public static class _Main
     {
+        private static Bot bot;
+        public static Bot Bot => bot;
         public static Task Main() => AsyncMain();
 
         private static async Task AsyncMain()
         {
-            Bot bot = new Bot(File.ReadAllText(FileUtil.Root("token.txt")));
-
+            bot = new Bot(File.ReadAllText(FileUtil.Root("token.txt")));
+            
             await bot.Start();
 
             while (bot.Running)
@@ -24,10 +26,22 @@ namespace Crusader
                     {
                         case "stop":
                             await bot.Stop();
+                            await bot.Dump();
                             break;
 
                         case "dump":
-                            await bot.DumpState();
+                            await Logger.Info("Dumping bot data...");
+                            await bot.Dump();
+                            await Logger.Info("Dump finished.");
+                            break;
+
+                        case "tod":
+                            await Logger.Info(Bot.TruthOrDare.GetRandom().Text);
+                            break;
+
+                        case "confess":
+                            Bot.Confessions.Create(0, 0, string.Join(' ', input[1..]));
+                            await Logger.Info("Confession logged.");
                             break;
                     }
                 }

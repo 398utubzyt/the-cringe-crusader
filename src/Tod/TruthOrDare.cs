@@ -1,21 +1,20 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 
 namespace Crusader.Tod
 {
-    public class TruthOrDare
+    public class TruthOrDare : IDumpable
     {
-        private FileDatabase<TodPrompt> truths;
-        private FileDatabase<TodPrompt> dares;
+        private readonly FileDatabase<TodPrompt> truths;
+        private readonly FileDatabase<TodPrompt> dares;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static TodPrompt ParsePrompt(string text) => new TodPrompt()
-        {
-                Type = text.ToLower()[0] switch { 't' => TodType.Truth, 'd' => TodType.Dare, _ => TodType.Truth },
-                Text = text[1..]
-        };
+        private static TodPrompt ParsePromptTruth(string text) => new TodPrompt() { Type = TodType.Truth, Text = text };
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static string ConvertPrompt(TodPrompt prompt) => $"{(prompt.Type == TodType.Dare ? 'd' : 't')}{prompt.Text}"
+        private static TodPrompt ParsePromptDare(string text) => new TodPrompt() { Type = TodType.Dare, Text = text };
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static string ConvertPrompt(TodPrompt prompt) => prompt.Text;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public TodPrompt GetTruth() => truths[(int)(Random.Shared.NextDouble() * truths.Count)];
@@ -25,13 +24,19 @@ namespace Crusader.Tod
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public TodPrompt GetRandom() => Random.Shared.NextDouble() < 0.5 ? GetTruth() : GetDare();
 
+        public async Task Dump()
+        {
+            await truths.DumpAsync(ConvertPrompt);
+            await dares.DumpAsync(ConvertPrompt);
+        }
+
         public TruthOrDare()
         {
             FileUtil.Ensure(FileUtil.Root("truth.txt"));
             FileUtil.Ensure(FileUtil.Root("dare.txt"));
 
-            truths = new FileDatabase<TodPrompt>(FileUtil.Root("truth.txt"), ParsePrompt);
-            dares = new FileDatabase<TodPrompt>(FileUtil.Root("dare.txt"), ParsePrompt);
+            truths = new FileDatabase<TodPrompt>(FileUtil.Root("truth.txt"), ParsePromptTruth);
+            dares = new FileDatabase<TodPrompt>(FileUtil.Root("dare.txt"), ParsePromptDare);
         }
     }
 }

@@ -12,9 +12,9 @@ namespace Crusader.Tod
         Dare
     }
 
-    public struct TodPrompt
+    public readonly struct TodPrompt
     {
-        public TodType Type;
-        public string Text;
+        public readonly TodType Type { init; get; }
+        public readonly string Text { init; get; }
     }
 }

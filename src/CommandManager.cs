@@ -60,7 +60,7 @@ namespace Crusader
         public static async Task Run(SocketSlashCommand command)
         {
             if (table.TryGetValue(command.Data.Name, out CringeCommand cmd))
-                await cmd.Run(command);
+                await cmd.Run(_Main.Bot, command);
         }
     }
 }

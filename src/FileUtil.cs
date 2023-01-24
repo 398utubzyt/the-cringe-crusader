@@ -17,10 +17,14 @@ namespace Crusader
             return value;
         }
 
-        public static void Ensure(string path)
+        public static bool Ensure(string path)
         {
             if (!File.Exists(path))
+            {
                 File.Create(path).Close();
+                return false;
+            }
+            return true;
         }
 
         public static string Root(string path)

@@ -9,7 +9,7 @@ namespace Crusader
     public delegate T StringParser<T>(string data) where T : notnull;
     public delegate string StringConverter<T>(T data) where T : notnull;
 
-    public class FileDatabase<T> : ICollection<T> where T : notnull
+    public class FileDatabase<T> : IDumpable, ICollection<T> where T : notnull
     {
         private readonly string _path;
         private T[] _db;
@@ -29,11 +29,13 @@ namespace Crusader
         public T Random()
             => _db[(int)(System.Random.Shared.NextDouble() * _db.Length)];
 
+        #region Dump
+
         public void Dump()
         {
             using StreamWriter writer = File.CreateText(_path);
-            foreach (T t in _db)
-                writer.WriteLine(t.ToString());
+            for (int i = 0; i < _c; i++)
+                writer.WriteLineAsync(_db[i].ToString());
         }
 
         public void Dump(StringConverter<T> converter)
@@ -41,9 +43,33 @@ namespace Crusader
             if (converter == null)
                 return;
             using StreamWriter writer = File.CreateText(_path);
-            foreach (T t in _db)
-                writer.WriteLine(converter(t));
+            for (int i = 0; i < _c; i++)
+                writer.WriteLineAsync(converter(_db[i]));
         }
+
+        public async Task DumpAsync()
+        {
+            using StreamWriter writer = File.CreateText(_path);
+            for (int i = 0; i < _c; i++)
+                await writer.WriteLineAsync(_db[i].ToString());
+        }
+
+        public async Task DumpAsync(StringConverter<T> converter)
+        {
+            if (converter == null)
+                return;
+            using StreamWriter writer = File.CreateText(_path);
+            for (int i = 0; i < _c; i++)
+                await writer.WriteLineAsync(converter(_db[i]));
+        }
+
+        #endregion
+
+        #region IDumpable
+
+        Task IDumpable.Dump() => DumpAsync();
+
+        #endregion
 
         #region ICollection<T>
 
@@ -99,7 +125,11 @@ namespace Crusader
             string[] lines = File.ReadAllLines(path);
             _db = new T[FileUtil.GreaterPowOf2(lines.Length)];
             for (int i = 0; i < lines.Length; i++)
-                _db[i] = parser(lines[i]);
+            {
+                if (!string.IsNullOrWhiteSpace(lines[i]))
+                    _db[i] = parser(lines[i]);
+            }
+            
             _c = lines.Length;
         }
     }

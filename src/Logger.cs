@@ -61,10 +61,11 @@ namespace Crusader
             if (type == LoggerType.Debug)
                 return Task.CompletedTask;
 #endif
-
+            ConsoleColor prev = Console.ForegroundColor;
             Console.ForegroundColor = GetColor(type);
             Console.Write(GetPrefix(type));
             Console.WriteLine(msg);
+            Console.ForegroundColor = prev;
             return Task.CompletedTask;
         }
 
@@ -80,7 +81,7 @@ namespace Crusader
         /// </summary>
         /// <param name="msg">The message to print.</param>
         /// <returns>The task result.</returns>
-        public static Task Warn(string msg) => Log(msg, LoggerType.Error);
+        public static Task Warn(string msg) => Log(msg, LoggerType.Warning);
 
         /// <summary>
         /// Logs an error message to the console.
