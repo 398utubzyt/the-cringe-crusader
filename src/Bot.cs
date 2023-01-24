@@ -8,9 +8,13 @@ namespace Crusader
 {
     public class Bot
     {
-        private string token;
-        private DiscordSocketClient client;
-        private CommandService commands;
+        private readonly string token;
+        private readonly DiscordSocketClient client;
+        private readonly CommandService commands;
+
+        public bool Running => client.ConnectionState == ConnectionState.Connected;
+
+        #region Start/Stop
 
         public async Task Start()
         {
@@ -24,6 +28,18 @@ namespace Crusader
             await client.LogoutAsync();
         }
 
+        #endregion
+
+        #region Events
+
+        public async Task Ready()
+        {
+            await Logger.Info("Ready");
+            
+        }
+
+        #endregion
+
         public Bot(string token)
         {
             client = new DiscordSocketClient();
@@ -32,6 +48,8 @@ namespace Crusader
             this.token = token;
 
             client.Log += Logger.Log;
+
+            client.Ready += Ready;
         }
     }
 }
