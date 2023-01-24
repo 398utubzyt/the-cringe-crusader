@@ -105,6 +105,8 @@ namespace Crusader
 
             client.Log += Logger.Log;
             client.SlashCommandExecuted += CommandManager.Run;
+            client.ButtonExecuted += CommandManager.Handle;
+            client.SelectMenuExecuted += CommandManager.Handle;
 
             client.Ready += Ready;
 

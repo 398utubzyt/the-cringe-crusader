@@ -21,22 +21,41 @@ namespace Crusader.Commands
         private static Color GetTypeColor(TodType type)
             => type switch { TodType.Truth => Color.Green, TodType.Dare => Color.Red, _ => Color.LightGrey };
 
-        public override async Task Run(Bot bot, SocketSlashCommand command)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private async Task Impl(Bot bot, IDiscordInteraction interaction, TodType type, bool button)
         {
-            await command.DeferAsync();
+            await interaction.DeferAsync();
 
-            TodPrompt prompt = bot.TruthOrDare.GetRandom();
+            TodPrompt prompt = type switch {
+                TodType.Truth => bot.TruthOrDare.GetTruth(),
+                TodType.Dare => bot.TruthOrDare.GetDare(),
+                _ => bot.TruthOrDare.GetRandom(),
+            };
 
             EmbedBuilder builder = new EmbedBuilder()
-                .WithAuthor($"Requested by {command.User.Username}#{command.User.Discriminator}")
+                .WithAuthor($"Requested by {interaction.User.Username}#{interaction.User.Discriminator}", interaction.User.GetAvatarUrl())
                 .WithTitle(prompt.Text)
                 .WithColor(GetTypeColor(prompt.Type))
                 .WithFooter($"Type: {GetTypeName(prompt.Type)}");
 
-            await command.ModifyOriginalResponseAsync(p =>
+            if (!button)
             {
-                p.Embed = builder.Build();
-            });
+                await interaction.ModifyOriginalResponseAsync(p =>
+                {
+                    p.Embed = builder.Build();
+                    p.Components = CommandUtil.GreenRedBlurpleButtons(this, "truth", "dare", "random", "Truth", "Dare", "Random");
+                });
+            } else
+            {
+                await interaction.ModifyOriginalResponseAsync(p => { p.Components = new ComponentBuilder().Build(); });
+                await interaction.FollowupAsync(embed: builder.Build(), 
+                    components: CommandUtil.GreenRedBlurpleButtons(this, "truth", "dare", "random", "Truth", "Dare", "Random"));
+            }
+            
         }
+
+        public override Task Run(Bot bot, SocketSlashCommand command) => Impl(bot, command, 0, false);
+        public override Task Handle(Bot bot, SocketMessageComponent component, string id)
+            => Impl(bot, component, id switch { "truth" => TodType.Truth, "dare" => TodType.Dare, _ => 0 }, true);
     }
 }

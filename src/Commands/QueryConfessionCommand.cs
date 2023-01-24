@@ -39,13 +39,13 @@ namespace Crusader.Commands
             Guid id;
             Confession confession;
 
-            if (Guid.TryParse(stringId, out id))
+            if (!Guid.TryParse(stringId, out id))
             {
                 builder
                 .WithAuthor($"Error!")
                 .WithTitle("That is not a valid confession ID!")
                 .WithColor(Color.Red);
-            } else if ((confession = bot.Confessions.Get(id)).Author == 0)
+            } else if ((confession = bot.Confessions.Get(id)).Id == Guid.Empty)
             {
                 builder
                 .WithAuthor($"Error!")
@@ -56,15 +56,20 @@ namespace Crusader.Commands
                 SocketGuildUser gu;
                 IUser user;
                 if ((gu = bot.Client.GetGuild(command.GuildId.Value).GetUser(confession.Author)) != null)
-                    builder.WithAuthor($"{gu.Username}#{gu.Discriminator} ({gu.Nickname})", gu.GetAvatarUrl());
+                    builder.WithAuthor($"{gu.Username}#{gu.Discriminator} {(gu.Nickname != null ? $"({gu.Nickname})" : null)}", 
+                        gu.GetAvatarUrl());
                 else if ((user = await bot.Client.GetUserAsync(confession.Author)) != null)
                     builder.WithAuthor($"{user.Username}#{user.Discriminator}", user.GetAvatarUrl());
                 else
-                    builder.WithAuthor($"Unknown User", bot.Client.CurrentUser.GetDefaultAvatarUrl());
+                    builder.WithAuthor($"Unknown User");
 
                 builder
                 .WithTitle($"\"{confession.Message}\"")
-                .WithFooter($"Sent at {SnowflakeUtils.FromSnowflake(confession.Date).LocalDateTime} - Confession ID {confession.Id}")
+                .WithFields(new EmbedFieldBuilder()
+                    .WithName("Sent at:")
+                    .WithValue(SnowflakeUtils.FromSnowflake(confession.Date).LocalDateTime.ToString())
+                )
+                .WithFooter($"ID: {confession.Id}")
                 .WithColor(Color.Blue);
             }
 

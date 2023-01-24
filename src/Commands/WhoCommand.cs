@@ -36,7 +36,7 @@ namespace Crusader.Commands
             ulong id;
             SocketGuildUser user;
 
-            if (ulong.TryParse(stringId, out id))
+            if (!ulong.TryParse(stringId, out id))
             {
                 builder
                 .WithAuthor($"Error!")
@@ -51,8 +51,9 @@ namespace Crusader.Commands
             } else
             {
                 builder
-                .WithAuthor($"That user is {command.User.Username}#{command.User.Discriminator}")
-                .WithTitle("Truth or Dare")
+                .WithAuthor("That user is: ")
+                .WithTitle($"{user.Username}#{user.Discriminator} {(user.Nickname != null ? $"({user.Nickname})" : null)}")
+                .WithImageUrl(user.GetAvatarUrl())
                 .WithColor(Color.Blue);
             }
 

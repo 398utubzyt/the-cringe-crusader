@@ -22,6 +22,8 @@ namespace Crusader.Commands
             return Task.CompletedTask;
         }
 
+        private const float RandomColorThreshold = 0.25f;
+
         public override async Task Run(Bot bot, SocketSlashCommand command)
         {
             await command.DeferAsync(true);
@@ -30,16 +32,19 @@ namespace Crusader.Commands
                 command.Data.Options.First().Value.ToString());
 
             EmbedBuilder builder = new EmbedBuilder()
-                .WithTitle("Anonymous Confession")
                 .WithColor(new Color(
-                    -Random.Shared.NextSingle() * 0.5f + 1.0f,
-                    -Random.Shared.NextSingle() * 0.5f + 1.0f,
-                    -Random.Shared.NextSingle() * 0.5f + 1.0f
+                    -Random.Shared.NextSingle() * RandomColorThreshold + 1.0f,
+                    -Random.Shared.NextSingle() * RandomColorThreshold + 1.0f,
+                    -Random.Shared.NextSingle() * RandomColorThreshold + 1.0f
                     ))
-                .WithFields(new EmbedFieldBuilder().WithName($"\"{confession.Message}\""))
-                .WithFooter(confession.Id.ToString());
+                .WithFields(
+                    new EmbedFieldBuilder()
+                        .WithName("Anonymous Confession")
+                        .WithValue($"\"{confession.Message}\"")
+                        .WithIsInline(true))
+                .WithFooter($"ID: {confession.Id}");
 
-            await command.RespondAsync(null, null, false, false, null, null, builder.Build());
+            await command.Channel.SendMessageAsync(null, false, builder.Build());
 
             await command.ModifyOriginalResponseAsync(p =>
             {

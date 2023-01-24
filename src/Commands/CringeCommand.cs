@@ -27,5 +27,13 @@ namespace Crusader.Commands
         /// <param name="bot">TCCC bot instance.</param>
         /// <param name="command">The Discord command context.</param>
         public abstract Task Run(Bot bot, SocketSlashCommand command);
+
+        /// <summary>
+        /// Handles component interaction.
+        /// This is not required, but is recommended for any command with component interaction.
+        /// </summary>
+        /// <param name="bot">TCCC bot instance.</param>
+        /// <param name="component">The component that was interacted with.</param>
+        public virtual Task Handle(Bot bot, SocketMessageComponent component, string id) { return Task.CompletedTask; }
     }
 }

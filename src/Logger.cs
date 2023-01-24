@@ -44,7 +44,7 @@ namespace Crusader
             LoggerType.Info => "INFO: ",
             LoggerType.Warning => "WARN: ",
             LoggerType.Error => "ERROR: ",
-            LoggerType.Debug => "DEBUG:",
+            LoggerType.Debug => "DEBUG: ",
             _ => string.Empty
         };
 

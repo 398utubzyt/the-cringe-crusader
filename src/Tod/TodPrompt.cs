@@ -12,9 +12,9 @@ namespace Crusader.Tod
     public enum TodType
     {
         /// <summary>Truth.</summary>
-        Truth,
+        Truth = 1,
         /// <summary>Dare.</summary>
-        Dare
+        Dare = 2,
     }
 
     public readonly struct TodPrompt
