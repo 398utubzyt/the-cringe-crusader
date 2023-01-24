@@ -6,15 +6,26 @@ using Discord;
 
 namespace Crusader
 {
+    /// <summary>
+    /// Logger priority.
+    /// </summary>
     public enum LoggerType
     {
+        /// <summary>No formatting.</summary>
         Default,
+        /// <summary>INFO.</summary>
         Info,
+        /// <summary>WARN.</summary>
         Warning,
+        /// <summary>ERROR.</summary>
         Error,
+        /// <summary>DEBUG.</summary>
         Debug,
     }
 
+    /// <summary>
+    /// Logs messages to the console.
+    /// </summary>
     public static class Logger
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
