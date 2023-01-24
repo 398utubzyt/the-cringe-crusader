@@ -12,7 +12,8 @@ namespace Crusader
         private readonly DiscordSocketClient client;
         //private readonly CommandService commands;
 
-        public bool Running => client.ConnectionState == ConnectionState.Connected;
+        private bool running;
+        public bool Running => running;
 
         #region Start/Stop
 
@@ -20,10 +21,12 @@ namespace Crusader
         {
             await client.LoginAsync(TokenType.Bot, token);
             await client.StartAsync();
+            running = true;
         }
 
         public async Task Stop()
         {
+            running = false;
             await client.StopAsync();
             await client.LogoutAsync();
         }
@@ -34,8 +37,15 @@ namespace Crusader
 
         public async Task Ready()
         {
-            await Logger.Info("Ready");
-            
+            await CommandManager.Load(client);
+        }
+
+        #endregion
+
+        #region Dump
+
+        public async Task DumpState()
+        {
             
         }
 

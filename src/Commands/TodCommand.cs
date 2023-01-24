@@ -3,6 +3,8 @@ using Discord.WebSocket;
 
 using System.Threading.Tasks;
 
+using Crusader.Tod;
+
 namespace Crusader.Commands
 {
     public class TodCommand : CringeCommand
@@ -14,7 +16,10 @@ namespace Crusader.Commands
         {
             await command.DeferAsync();
 
+            
+
             EmbedBuilder builder = new EmbedBuilder()
+                .WithAuthor($"Requested by {command.User.Username}#{command.User.Discriminator}")
                 .WithTitle("Truth or Dare")
                 .WithColor(Color.Purple);
 

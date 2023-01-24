@@ -16,7 +16,7 @@ namespace Crusader
     {
         private static bool loaded = false;
         private static Dictionary<string, CringeCommand> table;
-        public static async Task Load()
+        public static async Task Load(DiscordSocketClient client)
         {
             if (loaded)
                 return;
@@ -29,8 +29,8 @@ namespace Crusader
                 CringeCommand cmd = (CringeCommand)Activator.CreateInstance(types[i]);
                 if (cmd != null)
                 {
-                    SlashCommandBuilder builder = new SlashCommandBuilder();
-                    builder
+                    table.Add(cmd.Name, cmd);
+                    SlashCommandBuilder builder = new SlashCommandBuilder()
                         .WithName(cmd.Name)
                         .WithDescription(cmd.Description)
                         .WithDMPermission(false)
@@ -38,6 +38,7 @@ namespace Crusader
                         .WithDefaultMemberPermissions(cmd.Permission)
                         .WithNsfw(cmd.Nsfw);
                     await cmd.Build(builder);
+                    await client.CreateGlobalApplicationCommandAsync(builder.Build());
                 }
             }
 
@@ -58,7 +59,7 @@ namespace Crusader
 
         public static async Task Run(SocketSlashCommand command)
         {
-            if (table.TryGetValue(command.CommandName, out CringeCommand cmd))
+            if (table.TryGetValue(command.Data.Name, out CringeCommand cmd))
                 await cmd.Run(command);
         }
     }

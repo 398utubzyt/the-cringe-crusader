@@ -11,9 +11,7 @@ namespace Crusader
 
         private static async Task AsyncMain()
         {
-            await CommandManager.Load();
-
-            Bot bot = new Bot(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "token.txt")));
+            Bot bot = new Bot(File.ReadAllText(FileUtil.Root("token.txt")));
 
             await bot.Start();
 
@@ -26,6 +24,10 @@ namespace Crusader
                     {
                         case "stop":
                             await bot.Stop();
+                            break;
+
+                        case "dump":
+                            await bot.DumpState();
                             break;
                     }
                 }
