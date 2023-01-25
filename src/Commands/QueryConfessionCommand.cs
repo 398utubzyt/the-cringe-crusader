@@ -69,7 +69,7 @@ namespace Crusader.Commands
                     .WithName("Sent at:")
                     .WithValue(SnowflakeUtils.FromSnowflake(confession.Date).LocalDateTime.ToString())
                 )
-                .WithFooter($"ID: {confession.Id}")
+                .WithFooter($"{confession.Id}")
                 .WithColor(Color.Blue);
             }
 

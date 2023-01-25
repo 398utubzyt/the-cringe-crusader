@@ -15,7 +15,7 @@ namespace Crusader.Commands
         /// <summary>The command description.</summary>
         public abstract string Description { get; }
         /// <summary>The required permissions to run this command.</summary>
-        public virtual GuildPermission Permission { get; } = 0;
+        public virtual GuildPermission Permission { get; } = GuildPermission.UseApplicationCommands;
         /// <summary>Gets if the command is NSFW.</summary>
         public virtual bool Nsfw { get; } = false;
 

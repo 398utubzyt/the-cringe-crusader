@@ -28,6 +28,7 @@ namespace Crusader.Commands
         {
             await command.DeferAsync(true);
 
+            int num = bot.Confessions.Total;
             Confession confession = bot.Confessions.Create(SnowflakeUtils.ToSnowflake(DateTimeOffset.Now), command.User.Id, 
                 command.Data.Options.First().Value.ToString());
 
@@ -39,10 +40,10 @@ namespace Crusader.Commands
                     ))
                 .WithFields(
                     new EmbedFieldBuilder()
-                        .WithName("Anonymous Confession")
+                        .WithName($"Anonymous Confession (#{num})")
                         .WithValue($"\"{confession.Message}\"")
                         .WithIsInline(true))
-                .WithFooter($"ID: {confession.Id}");
+                .WithFooter($"{confession.Id}");
 
             await command.Channel.SendMessageAsync(null, false, builder.Build());
 

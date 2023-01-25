@@ -11,7 +11,6 @@ namespace Crusader.Commands
     {
         public override string Name => "who";
         public override string Description => "Look up a user with their user ID.";
-        public override GuildPermission Permission => GuildPermission.ManageGuild;
 
         public override Task Build(SlashCommandBuilder builder)
         {

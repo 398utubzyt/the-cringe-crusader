@@ -1,1 +1,0 @@
-xcopy ../token.txt ../bin/Release/net6.0/token.txt /y

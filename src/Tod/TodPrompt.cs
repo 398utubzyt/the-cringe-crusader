@@ -15,6 +15,8 @@ namespace Crusader.Tod
         Truth = 1,
         /// <summary>Dare.</summary>
         Dare = 2,
+        /// <summary>Would You Rather.</summary>
+        Wyr = 3,
     }
 
     public readonly struct TodPrompt

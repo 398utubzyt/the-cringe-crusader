@@ -62,8 +62,8 @@ namespace Crusader
                     SlashCommandBuilder builder = new SlashCommandBuilder()
                         .WithName(cmd.Name)
                         .WithDescription(cmd.Description)
-                        .WithDefaultPermission(cmd.Permission == 0)
-                        .WithDefaultMemberPermissions(cmd.Permission)
+                        .WithDefaultPermission(true)
+                        .WithDefaultMemberPermissions(GuildPermission.UseApplicationCommands | cmd.Permission)
                         .WithNsfw(cmd.Nsfw)
                         .WithDMPermission(false);
                     await cmd.Build(builder);
@@ -73,19 +73,21 @@ namespace Crusader
                 }
             }
 
-            await client.BulkOverwriteGlobalApplicationCommandsAsync(acmds);
+            //await client.BulkOverwriteGlobalApplicationCommandsAsync(acmds);
             foreach (SocketGuild guild in client.Guilds)
-                await guild.BulkOverwriteApplicationCommandAsync(new ApplicationCommandProperties[0]);
-
-            IReadOnlyCollection<SocketApplicationCommand> rocmds = await client.GetGlobalApplicationCommandsAsync();
-            foreach(ApplicationCommandProperties prop in acmds)
             {
-                bool contains = false;
-                foreach (SocketApplicationCommand sac in rocmds)
-                    if (sac.Name == prop.Name.GetValueOrDefault())
-                        contains = true;
-                if (!contains)
-                    await client.CreateGlobalApplicationCommandAsync(prop);
+                await guild.BulkOverwriteApplicationCommandAsync(acmds);
+
+                IReadOnlyCollection<SocketApplicationCommand> rocmds = await guild.GetApplicationCommandsAsync();
+                foreach (ApplicationCommandProperties prop in acmds)
+                {
+                    bool contains = false;
+                    foreach (SocketApplicationCommand sac in rocmds)
+                        if (sac.Name == prop.Name.GetValueOrDefault())
+                            contains = true;
+                    if (!contains)
+                        await guild.CreateApplicationCommandAsync(prop).ConfigureAwait(false);
+                }
             }
 
             loaded = true;

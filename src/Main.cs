@@ -56,7 +56,7 @@ namespace Crusader
 
                         // Generate a Truth or Dare prompt.
                         case "tod":
-                            await Logger.Info(Bot.TruthOrDare.GetRandom().Text);
+                            await Logger.Info(Bot.TruthOrDare.GetTruthOrDare().Text);
                             break;
 
                         // Logs a confession.

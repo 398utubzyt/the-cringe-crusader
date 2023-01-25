@@ -9,6 +9,15 @@ namespace Crusader.Confess
         private readonly FileDatabase<Confession>[] confessions; // This naming scheme will not get confusing...
         private readonly int current;
 
+        /// <summary>Get total confession count.</summary>
+        public int Total { get 
+            { 
+                int result = 0;
+                foreach (FileDatabase<Confession> db in confessions)
+                    if (db != null) result += db.Count;
+                return result; 
+            } }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Confession ParsePrompt(string text)
         {

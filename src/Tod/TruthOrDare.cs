@@ -8,11 +8,14 @@ namespace Crusader.Tod
     {
         private readonly FileDatabase<TodPrompt> truths;
         private readonly FileDatabase<TodPrompt> dares;
+        private readonly FileDatabase<TodPrompt> wyrs;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static TodPrompt ParsePromptTruth(string text) => new TodPrompt() { Type = TodType.Truth, Text = text };
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static TodPrompt ParsePromptDare(string text) => new TodPrompt() { Type = TodType.Dare, Text = text };
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static TodPrompt ParsePromptWyr(string text) => new TodPrompt() { Type = TodType.Wyr, Text = text };
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static string ConvertPrompt(TodPrompt prompt) => prompt.Text;
 
@@ -26,15 +29,21 @@ namespace Crusader.Tod
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public TodPrompt GetDare() => dares[(int)(Random.Shared.NextDouble() * dares.Count)];
 
+        /// <summary>Gets a random Would You Rather prompt.</summary>
+        /// <returns>A random Would You Rather prompt.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public TodPrompt GetWyr() => wyrs[(int)(Random.Shared.NextDouble() * wyrs.Count)];
+
         /// <summary>Gets a random Truth or Dare prompt.</summary>
         /// <returns>A random prompt.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public TodPrompt GetRandom() => Random.Shared.NextDouble() < 0.5 ? GetTruth() : GetDare();
+        public TodPrompt GetTruthOrDare() => Random.Shared.NextDouble() < 0.5 ? GetTruth() : GetDare();
 
         public async Task Dump()
         {
             await truths.DumpAsync(ConvertPrompt);
             await dares.DumpAsync(ConvertPrompt);
+            await wyrs.DumpAsync(ConvertPrompt);
         }
 
         /// <summary>Creates a new Truth or Dare instance.</summary>
@@ -42,9 +51,11 @@ namespace Crusader.Tod
         {
             FileUtil.Ensure(FileUtil.Root("truth.txt"));
             FileUtil.Ensure(FileUtil.Root("dare.txt"));
+            FileUtil.Ensure(FileUtil.Root("wyr.txt"));
 
             truths = new FileDatabase<TodPrompt>(FileUtil.Root("truth.txt"), ParsePromptTruth);
             dares = new FileDatabase<TodPrompt>(FileUtil.Root("dare.txt"), ParsePromptDare);
+            wyrs = new FileDatabase<TodPrompt>(FileUtil.Root("wyr.txt"), ParsePromptWyr);
         }
     }
 }
