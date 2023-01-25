@@ -9,16 +9,25 @@
     <IsPublishable>True</IsPublishable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    <BaseOutputPath>../bin/</BaseOutputPath>
-    <ApplicationIcon>../res/icon.ico</ApplicationIcon>
+    <BaseOutputPath>..\bin\</BaseOutputPath>
+    <ApplicationIcon>..\res\icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="3.9.0" />
+	<DumpTemplate Include="$(ProjectDir)..\res\dump\*.*" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy $(SolutionDir)res\dump\* $(SolutionDir)$(OutDir) /y" />
+  <Target Name="CopyFiles" AfterTargets="Build">
+	<Copy SourceFiles="@(DumpTemplate)" DestinationFolder="$(ProjectDir)..\$(OutDir)" />
   </Target>
 
 </Project>
