@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy $(SolutionDir)res\dump\* $(SolutionDir)$(OutDir) /y" />
+    <Exec Command="xcopy $(ProjectDir)../res/dump/* $(ProjectDir)../$(OutDir) /y" />
   </Target>
 
 </Project>
