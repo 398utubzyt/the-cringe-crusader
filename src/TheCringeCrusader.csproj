@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="3.9.0" />
-	<DumpTemplate Include="$(ProjectDir)..\res\dump\*.*" />
+	<DumpTemplate Include="$(ProjectDir)..\res\dump\**\*.*" />
   </ItemGroup>
 
   <Target Name="CopyFiles" AfterTargets="Build">
