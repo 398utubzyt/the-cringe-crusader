@@ -80,6 +80,9 @@ namespace Crusader.Confess
         /// <summary>Creates a new Confessions instance.</summary>
         public Confessions()
         {
+            // Make sure root folder exists.
+            FileUtil.DirEnsure(FileUtil.Root($"confessions"));
+
             current = 0;
             while (FileUtil.Exists(FileUtil.Root($"confessions/{current}.txt")))
                 current++; // Do not automatically create.

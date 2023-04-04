@@ -39,6 +39,26 @@ namespace Crusader.Tod
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public TodPrompt GetTruthOrDare() => Random.Shared.NextDouble() < 0.5 ? GetTruth() : GetDare();
 
+        /// <summary>Adds a prompt to the database.</summary>
+        /// <param name="prompt">The prompt to add.</param>
+        public void Add(TodPrompt prompt)
+        {
+            switch (prompt.Type)
+            {
+                case TodType.Truth:
+                    truths.Add(prompt);
+                    break;
+
+                case TodType.Dare:
+                    dares.Add(prompt);
+                    break;
+
+                case TodType.Wyr:
+                    wyrs.Add(prompt);
+                    break;
+            }
+        }
+
         public async Task Dump()
         {
             await truths.DumpAsync(ConvertPrompt);

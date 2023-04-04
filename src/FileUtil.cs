@@ -42,6 +42,27 @@ namespace Crusader
             return true;
         }
 
+        /// <summary>Gets whether a directory <paramref name="path"/> exists or not.</summary>
+        /// <param name="path">The path to check.</param>
+        /// <returns><see langword="true"/> if it already exists, otherwise <see langword="false"/>.</returns>
+        public static bool DirExists(string path)
+        {
+            return Directory.Exists(path);
+        }
+
+        /// <summary>Ensures that a directory <paramref name="path"/> exists.</summary>
+        /// <param name="path">The path to check.</param>
+        /// <returns><see langword="true"/> if it already exists, otherwise <see langword="false"/>.</returns>
+        public static bool DirEnsure(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+                return false;
+            }
+            return true;
+        }
+
         /// <summary>Combines <paramref name="path"/> with the application directory.</summary>
         /// <param name="path">The path to combine.</param>
         /// <returns>The combined result of the full application directory and <paramref name="path"/>.</returns>
